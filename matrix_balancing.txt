@@ -1,0 +1,21 @@
+#matrix balancing
+for a in DN WT
+do
+for b in minus plus
+do
+for c in `seq 1 2`
+do
+for d in `seq 1 50`
+do
+e=$((${d}-1))
+awk '{for (i=1; i<=140; i++){sum[NR]=sum[NR]+$i}} END {for (i=1; i<=140; i++) {if (sum[i]==0) sum[i]=1}; for (i=1; i<=140; i++) {cover_ave=cover_ave+sum[i]/140}; for (i=1; i<=140; i++){print sum[i]/140}}' ${a}_${b}_${c}_normalization_${e}.txt > ${a}_${b}_${c}_normalization_list_${d}.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"; i=1; while((getline < "'"${a}"'_'"${b}"'_'"${c}"'_normalization_list_'"${d}"'.txt")>0) {a[i]=$0; i=i+1}} {for (i=1; i<=140; i++) {$i = $i/a[i]/a[NR]}}; {print $0}' ${a}_${b}_${c}_normalization_${e}.txt > ${a}_${b}_${c}_normalization_${d}.txt
+done
+for d in `seq 1 49`
+do
+rm ${a}_${b}_${c}_normalization_list_${d}.txt &&
+rm ${a}_${b}_${c}_normalization_${d}.txt
+done
+done
+done
+done
