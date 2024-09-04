@@ -1,0 +1,41 @@
+import random
+import statistics
+import math
+import matplotlib.pyplot as plt
+
+def count_common_numbers():
+    group1 = random.sample(range(1, 8454), 431)
+    group2 = random.sample(range(1, 8454), 659)
+    return len(set(group1) & set(group2))
+
+original_common_count = 70
+num_trials = 10000
+
+# We'll use a list comprehension for the trials and simultaneously count the exceedances
+a = []
+exceedance_count = 0  # This will count how many times we exceed the original_common_count
+for i in range(num_trials):
+    common_count = count_common_numbers()
+    a.append(common_count)
+    if common_count > original_common_count:
+        exceedance_count += 1  # Increment if the current trial exceeds the original count
+
+total_common = sum(a)
+var_score = statistics.pvariance(a)
+expected_common = total_common / num_trials
+
+print("Expected number of common numbers:", expected_common, expected_common - math.sqrt(var_score) * 2, expected_common + math.sqrt(var_score) * 2)
+print(f"Number of trials exceeding original common count ({original_common_count}): {exceedance_count}")
+print("p-value:", exceedance_count/num_trials)
+
+# Setting the size of the plot to width 1000px and height 800px
+plt.figure(figsize=(10, 8), dpi=300)  # 1000px width, 800px height at 300 dpi
+
+# Plotting the histogram of the common_count
+plt.hist(a, bins=range(min(a), max(a) + 1), edgecolor='black', alpha=0.7, color='#1BA466')
+plt.title('Histogram of Common Counts from Trials')
+plt.xlabel('Number of Common Numbers')
+plt.ylabel('Frequency')
+plt.axvline(x=original_common_count, color='red', linestyle='dashed', linewidth=1)
+plt.legend()
+plt.show()
