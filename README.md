@@ -1,4 +1,7 @@
 # flu_LIGR_seq
-Source codes for matrix balancing normalization (awk) and random simulation (python).
+Source codes for flu_LIGR_seq.
+Sequence data was deposited to DDBJ.
 
-matrix balancing needs 140x140 matrix file.
+"analysis.txt" contains examples of processing sequence data, creating interaction matrix (including normalization and IDR), and extracting intersegment interactions.
+"matrix_balancing.txt" is a source code for matrix balancing normalization (awk).
+"random_simulation.txt" is a source code for random simulation (python).
