@@ -1,0 +1,225 @@
+java -jar trimmomatic-0.36.jar PE -phred33 DN-minus-1_R1_001.fastq DN-minus-1_R2_001.fastq DN_minus_1_R1_trim.fq DN_minus_1_R1_unpaired.fq DN_minus_1_R2_trim.fq DN_minus_1_R2_unpaired.fq SLIDINGWINDOW:15:25 CROP:25 &&
+java -jar trimmomatic-0.36.jar PE -phred33 DN-minus-2_R1_001.fastq DN-minus-2_R2_001.fastq DN_minus_2_R1_trim.fq DN_minus_2_R1_unpaired.fq DN_minus_2_R2_trim.fq DN_minus_2_R2_unpaired.fq SLIDINGWINDOW:15:25 CROP:25 &&
+java -jar trimmomatic-0.36.jar PE -phred33 DN-plus-1_R1_001.fastq DN-plus-1_R2_001.fastq DN_plus_1_R1_trim.fq DN_plus_1_R1_unpaired.fq DN_plus_1_R2_trim.fq DN_plus_1_R2_unpaired.fq SLIDINGWINDOW:15:25 CROP:25 &&
+java -jar trimmomatic-0.36.jar PE -phred33 DN-plus-2_R1_001.fastq DN-plus-2_R2_001.fastq DN_plus_2_R1_trim.fq DN_plus_2_R1_unpaired.fq DN_plus_2_R2_trim.fq DN_plus_2_R2_unpaired.fq SLIDINGWINDOW:15:25 CROP:25 &&
+java -jar trimmomatic-0.36.jar PE -phred33 WT-minus-1_R1_001.fastq WT-minus-1_R2_001.fastq WT_minus_1_R1_trim.fq WT_minus_1_R1_unpaired.fq WT_minus_1_R2_trim.fq WT_minus_1_R2_unpaired.fq SLIDINGWINDOW:15:25 CROP:25 &&
+java -jar trimmomatic-0.36.jar PE -phred33 WT-minus-2_R1_001.fastq WT-minus-2_R2_001.fastq WT_minus_2_R1_trim.fq WT_minus_2_R1_unpaired.fq WT_minus_2_R2_trim.fq WT_minus_2_R2_unpaired.fq SLIDINGWINDOW:15:25 CROP:25 &&
+java -jar trimmomatic-0.36.jar PE -phred33 WT-plus-1_R1_001.fastq WT-plus-1_R2_001.fastq WT_plus_1_R1_trim.fq WT_plus_1_R1_unpaired.fq WT_plus_1_R2_trim.fq WT_plus_1_R2_unpaired.fq SLIDINGWINDOW:15:25 CROP:25 &&
+java -jar trimmomatic-0.36.jar PE -phred33 WT-plus-2_R1_001.fastq WT-plus-2_R2_001.fastq WT_plus_2_R1_trim.fq WT_plus_2_R1_unpaired.fq WT_plus_2_R2_trim.fq WT_plus_2_R2_unpaired.fq SLIDINGWINDOW:15:25 CROP:25
+
+bowtie2 -x PR8 -1 DN_minus_1_R1_trim.fq -2 DN_minus_1_R2_trim.fq -S DN_minus_1.sam &&
+bowtie2 -x PR8 -1 DN_minus_2_R1_trim.fq -2 DN_minus_2_R2_trim.fq -S DN_minus_2.sam &&
+bowtie2 -x PR8 -1 DN_plus_1_R1_trim.fq -2 DN_plus_1_R2_trim.fq -S DN_plus_1.sam &&
+bowtie2 -x PR8 -1 DN_plus_2_R1_trim.fq -2 DN_plus_2_R2_trim.fq -S DN_plus_2.sam &&
+bowtie2 -x PR8 -1 WT_minus_1_R1_trim.fq -2 WT_minus_1_R2_trim.fq -S WT_minus_1.sam &&
+bowtie2 -x PR8 -1 WT_minus_2_R1_trim.fq -2 WT_minus_2_R2_trim.fq -S WT_minus_2.sam &&
+bowtie2 -x PR8 -1 WT_plus_1_R1_trim.fq -2 WT_plus_1_R2_trim.fq -S WT_plus_1.sam &&
+bowtie2 -x PR8 -1 WT_plus_2_R1_trim.fq -2 WT_plus_2_R2_trim.fq -S WT_plus_2.sam
+
+
+#intersegment interactionの抽出
+awk '$7 != "=" && $7 != "*" && $2 == "145" {print $3,$4,$7,$8}; $7 != "=" && $7 != "*" && $2 == "161" {print $3,$4,$7,$8}' DN_minus_1.sam > DN_minus_1.txt &&
+awk '$7 != "=" && $7 != "*" && $2 == "145" {print $3,$4,$7,$8}; $7 != "=" && $7 != "*" && $2 == "161" {print $3,$4,$7,$8}' DN_minus_2.sam > DN_minus_2.txt &&
+awk '$7 != "=" && $7 != "*" && $2 == "145" {print $3,$4,$7,$8}; $7 != "=" && $7 != "*" && $2 == "161" {print $3,$4,$7,$8}' DN_plus_1.sam > DN_plus_1.txt &&
+awk '$7 != "=" && $7 != "*" && $2 == "145" {print $3,$4,$7,$8}; $7 != "=" && $7 != "*" && $2 == "161" {print $3,$4,$7,$8}' DN_plus_2.sam > DN_plus_2.txt &&
+awk '$7 != "=" && $7 != "*" && $2 == "145" {print $3,$4,$7,$8}; $7 != "=" && $7 != "*" && $2 == "161" {print $3,$4,$7,$8}' WT_minus_1.sam > WT_minus_1.txt &&
+awk '$7 != "=" && $7 != "*" && $2 == "145" {print $3,$4,$7,$8}; $7 != "=" && $7 != "*" && $2 == "161" {print $3,$4,$7,$8}' WT_minus_2.sam > WT_minus_2.txt &&
+awk '$7 != "=" && $7 != "*" && $2 == "145" {print $3,$4,$7,$8}; $7 != "=" && $7 != "*" && $2 == "161" {print $3,$4,$7,$8}' WT_plus_1.sam > WT_plus_1.txt &&
+awk '$7 != "=" && $7 != "*" && $2 == "145" {print $3,$4,$7,$8}; $7 != "=" && $7 != "*" && $2 == "161" {print $3,$4,$7,$8}' WT_plus_2.sam > WT_plus_2.txt
+
+#intrasegmentの抽出
+awk 'BEGIN {FS="\t";OFS="\t"}; $2 == "97" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "97" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}' DN_minus_1.sam > DN_minus_1_intra.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $2 == "97" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "97" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}' DN_minus_2.sam > DN_minus_2_intra.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $2 == "97" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "97" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}' DN_plus_1.sam > DN_plus_1_intra.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $2 == "97" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "97" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}' DN_plus_2.sam > DN_plus_2_intra.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $2 == "97" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "97" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}' WT_minus_1.sam > WT_minus_1_intra.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $2 == "97" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "97" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}' WT_minus_2.sam > WT_minus_2_intra.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $2 == "97" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "97" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}' WT_plus_1.sam > WT_plus_1_intra.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $2 == "97" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "97" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 <=0 && $7 == "=" {print $3,$4,$7,$8}; $2 == "161" && $9 >=499 && $7 == "=" {print $3,$4,$7,$8}' WT_plus_2.sam > WT_plus_2_intra.txt
+
+#カウント（intersegment）
+for a in DN WT
+do
+for b in minus plus
+do
+for c in `seq 1 2`
+do
+awk '{if ($1 == "Segment1" && $3 == "Segment2") print $0; else {if ($1 == "Segment2" && $3 == "Segment1") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 24; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 24; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg1-Seg2-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment1" && $3 == "Segment3") print $0; else {if ($1 == "Segment3" && $3 == "Segment1") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 23; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 23; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg1-Seg3-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment1" && $3 == "Segment4") print $0; else {if ($1 == "Segment4" && $3 == "Segment1") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 18; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 18; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg1-Seg4-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment1" && $3 == "Segment5") print $0; else {if ($1 == "Segment5" && $3 == "Segment1") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 16; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 16; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg1-Seg5-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment1" && $3 == "Segment6") print $0; else {if ($1 == "Segment6" && $3 == "Segment1") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 15; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 15; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg1-Seg6-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment1" && $3 == "Segment7") print $0; else {if ($1 == "Segment7" && $3 == "Segment1") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 11; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 11; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg1-Seg7-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment1" && $3 == "Segment8") print $0; else {if ($1 == "Segment8" && $3 == "Segment1") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 9; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 9; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg1-Seg8-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment2" && $3 == "Segment3") print $0; else {if ($1 == "Segment3" && $3 == "Segment2") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 23; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 23; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg2-Seg3-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment2" && $3 == "Segment4") print $0; else {if ($1 == "Segment4" && $3 == "Segment2") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 18; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 18; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg2-Seg4-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment2" && $3 == "Segment5") print $0; else {if ($1 == "Segment5" && $3 == "Segment2") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 16; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 16; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg2-Seg5-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment2" && $3 == "Segment6") print $0; else {if ($1 == "Segment6" && $3 == "Segment2") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 15; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 15; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg2-Seg6-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment2" && $3 == "Segment7") print $0; else {if ($1 == "Segment7" && $3 == "Segment2") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 11; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 11; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg2-Seg7-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment2" && $3 == "Segment8") print $0; else {if ($1 == "Segment8" && $3 == "Segment2") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 9; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 9; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg2-Seg8-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment3" && $3 == "Segment4") print $0; else {if ($1 == "Segment4" && $3 == "Segment3") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 23; i++) {for (j=1; j <= 18; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 23; i++) {for (j=1; j <= 18; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg3-Seg4-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment3" && $3 == "Segment5") print $0; else {if ($1 == "Segment5" && $3 == "Segment3") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 23; i++) {for (j=1; j <= 16; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 23; i++) {for (j=1; j <= 16; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg3-Seg5-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment3" && $3 == "Segment6") print $0; else {if ($1 == "Segment6" && $3 == "Segment3") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 23; i++) {for (j=1; j <= 15; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 23; i++) {for (j=1; j <= 15; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg3-Seg6-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment3" && $3 == "Segment7") print $0; else {if ($1 == "Segment7" && $3 == "Segment3") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 23; i++) {for (j=1; j <= 11; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 23; i++) {for (j=1; j <= 11; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg3-Seg7-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment3" && $3 == "Segment8") print $0; else {if ($1 == "Segment8" && $3 == "Segment3") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 23; i++) {for (j=1; j <= 9; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 23; i++) {for (j=1; j <= 9; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg3-Seg8-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment4" && $3 == "Segment5") print $0; else {if ($1 == "Segment5" && $3 == "Segment4") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 18; i++) {for (j=1; j <= 16; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 18; i++) {for (j=1; j <= 16; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg4-Seg5-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment4" && $3 == "Segment6") print $0; else {if ($1 == "Segment6" && $3 == "Segment4") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 18; i++) {for (j=1; j <= 15; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 18; i++) {for (j=1; j <= 15; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg4-Seg6-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment4" && $3 == "Segment7") print $0; else {if ($1 == "Segment7" && $3 == "Segment4") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 18; i++) {for (j=1; j <= 11; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 18; i++) {for (j=1; j <= 11; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg4-Seg7-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment4" && $3 == "Segment8") print $0; else {if ($1 == "Segment8" && $3 == "Segment4") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 18; i++) {for (j=1; j <= 9; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 18; i++) {for (j=1; j <= 9; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg4-Seg8-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment5" && $3 == "Segment6") print $0; else {if ($1 == "Segment6" && $3 == "Segment5") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 16; i++) {for (j=1; j <= 15; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 16; i++) {for (j=1; j <= 15; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg5-Seg6-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment5" && $3 == "Segment7") print $0; else {if ($1 == "Segment7" && $3 == "Segment5") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 16; i++) {for (j=1; j <= 11; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 16; i++) {for (j=1; j <= 11; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg5-Seg7-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment5" && $3 == "Segment8") print $0; else {if ($1 == "Segment8" && $3 == "Segment5") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 16; i++) {for (j=1; j <= 9; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 16; i++) {for (j=1; j <= 9; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg5-Seg8-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment6" && $3 == "Segment7") print $0; else {if ($1 == "Segment7" && $3 == "Segment6") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 15; i++) {for (j=1; j <= 11; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 15; i++) {for (j=1; j <= 11; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg6-Seg7-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment6" && $3 == "Segment8") print $0; else {if ($1 == "Segment8" && $3 == "Segment6") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 15; i++) {for (j=1; j <= 9; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 15; i++) {for (j=1; j <= 9; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg6-Seg8-${a}_${b}_${c}_matrix.txt &&
+awk '{if ($1 == "Segment7" && $3 == "Segment8") print $0; else {if ($1 == "Segment8" && $3 == "Segment7") print $3"\t"$4"\t"$1"\t"$2}}' ${a}_${b}_${c}.txt | awk '{for (i=1; i <= 11; i++) {for (j=1; j <= 9; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 11; i++) {for (j=1; j <= 9; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > Seg7-Seg8-${a}_${b}_${c}_matrix.txt
+done
+done
+done
+
+#カウント（intrasegment）
+for a in DN WT
+do
+for b in minus plus
+do
+for c in `seq 1 2`
+do
+awk 'BEGIN {FS="\t";OFS="\t"}; $1 == "Segment1"' ${a}_${b}_${c}_intra.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 24; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 24; j++) {if (a[i,j]=="") a[i,j]=0; b[i,j]=a[i,j]+a[j,i]; if (i == j) b[i,j]= b[i,j]/2; printf b[i,j]"\t"}; print ""}}' > Seg1-${a}_${b}_${c}_intraseg_matrix.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $1 == "Segment2"' ${a}_${b}_${c}_intra.txt | awk '{for (i=1; i <= 24; i++) {for (j=1; j <= 24; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 24; i++) {for (j=1; j <= 24; j++) {if (a[i,j]=="") a[i,j]=0; b[i,j]=a[i,j]+a[j,i]; if (i == j) b[i,j]= b[i,j]/2; printf b[i,j]"\t"}; print ""}}' > Seg2-${a}_${b}_${c}_intraseg_matrix.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $1 == "Segment3"' ${a}_${b}_${c}_intra.txt | awk '{for (i=1; i <= 23; i++) {for (j=1; j <= 23; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 23; i++) {for (j=1; j <= 23; j++) {if (a[i,j]=="") a[i,j]=0; b[i,j]=a[i,j]+a[j,i]; if (i == j) b[i,j]= b[i,j]/2; printf b[i,j]"\t"}; print ""}}' > Seg3-${a}_${b}_${c}_intraseg_matrix.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $1 == "Segment4"' ${a}_${b}_${c}_intra.txt | awk '{for (i=1; i <= 18; i++) {for (j=1; j <= 18; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 18; i++) {for (j=1; j <= 18; j++) {if (a[i,j]=="") a[i,j]=0; b[i,j]=a[i,j]+a[j,i]; if (i == j) b[i,j]= b[i,j]/2; printf b[i,j]"\t"}; print ""}}' > Seg4-${a}_${b}_${c}_intraseg_matrix.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $1 == "Segment5"' ${a}_${b}_${c}_intra.txt | awk '{for (i=1; i <= 16; i++) {for (j=1; j <= 16; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 16; i++) {for (j=1; j <= 16; j++) {if (a[i,j]=="") a[i,j]=0; b[i,j]=a[i,j]+a[j,i]; if (i == j) b[i,j]= b[i,j]/2; printf b[i,j]"\t"}; print ""}}' > Seg5-${a}_${b}_${c}_intraseg_matrix.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $1 == "Segment6"' ${a}_${b}_${c}_intra.txt | awk '{for (i=1; i <= 15; i++) {for (j=1; j <= 15; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 15; i++) {for (j=1; j <= 15; j++) {if (a[i,j]=="") a[i,j]=0; b[i,j]=a[i,j]+a[j,i]; if (i == j) b[i,j]= b[i,j]/2; printf b[i,j]"\t"}; print ""}}' > Seg6-${a}_${b}_${c}_intraseg_matrix.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $1 == "Segment7"' ${a}_${b}_${c}_intra.txt | awk '{for (i=1; i <= 11; i++) {for (j=1; j <= 11; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 11; i++) {for (j=1; j <= 11; j++) {if (a[i,j]=="") a[i,j]=0; b[i,j]=a[i,j]+a[j,i]; if (i == j) b[i,j]= b[i,j]/2; printf b[i,j]"\t"}; print ""}}' > Seg7-${a}_${b}_${c}_intraseg_matrix.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; $1 == "Segment8"' ${a}_${b}_${c}_intra.txt | awk '{for (i=1; i <= 9; i++) {for (j=1; j <= 9; j++) {if (100*(i-1)+1 <= $2 && 100*i >= $2) if (100*(j-1)+1 <= $4 && 100*j >= $4) a[i,j]=a[i,j]+1}}}; END{for (i=1; i <= 9; i++) {for (j=1; j <= 9; j++) {if (a[i,j]=="") a[i,j]=0; b[i,j]=a[i,j]+a[j,i]; if (i == j) b[i,j]= b[i,j]/2; printf b[i,j]"\t"}; print ""}}' > Seg8-${a}_${b}_${c}_intraseg_matrix.txt
+done
+done
+done
+
+#行列変換
+for a in DN WT
+do
+for b in minus plus
+do
+for c in `seq 1 2`
+do
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg1-Seg2-${a}_${b}_${c}_matrix.txt > Seg1-Seg2-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg1-Seg3-${a}_${b}_${c}_matrix.txt > Seg1-Seg3-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg1-Seg4-${a}_${b}_${c}_matrix.txt > Seg1-Seg4-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg1-Seg5-${a}_${b}_${c}_matrix.txt > Seg1-Seg5-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg1-Seg6-${a}_${b}_${c}_matrix.txt > Seg1-Seg6-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg1-Seg7-${a}_${b}_${c}_matrix.txt > Seg1-Seg7-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg1-Seg8-${a}_${b}_${c}_matrix.txt > Seg1-Seg8-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg2-Seg3-${a}_${b}_${c}_matrix.txt > Seg2-Seg3-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg2-Seg4-${a}_${b}_${c}_matrix.txt > Seg2-Seg4-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg2-Seg5-${a}_${b}_${c}_matrix.txt > Seg2-Seg5-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg2-Seg6-${a}_${b}_${c}_matrix.txt > Seg2-Seg6-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg2-Seg7-${a}_${b}_${c}_matrix.txt > Seg2-Seg7-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg2-Seg8-${a}_${b}_${c}_matrix.txt > Seg2-Seg8-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg3-Seg4-${a}_${b}_${c}_matrix.txt > Seg3-Seg4-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg3-Seg5-${a}_${b}_${c}_matrix.txt > Seg3-Seg5-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg3-Seg6-${a}_${b}_${c}_matrix.txt > Seg3-Seg6-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg3-Seg7-${a}_${b}_${c}_matrix.txt > Seg3-Seg7-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg3-Seg8-${a}_${b}_${c}_matrix.txt > Seg3-Seg8-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg4-Seg5-${a}_${b}_${c}_matrix.txt > Seg4-Seg5-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg4-Seg6-${a}_${b}_${c}_matrix.txt > Seg4-Seg6-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg4-Seg7-${a}_${b}_${c}_matrix.txt > Seg4-Seg7-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg4-Seg8-${a}_${b}_${c}_matrix.txt > Seg4-Seg8-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg5-Seg6-${a}_${b}_${c}_matrix.txt > Seg5-Seg6-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg5-Seg7-${a}_${b}_${c}_matrix.txt > Seg5-Seg7-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg5-Seg8-${a}_${b}_${c}_matrix.txt > Seg5-Seg8-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg6-Seg7-${a}_${b}_${c}_matrix.txt > Seg6-Seg7-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg6-Seg8-${a}_${b}_${c}_matrix.txt > Seg6-Seg8-${a}_${b}_${c}_matrix_rt.txt &&
+awk '{for (i=1; i<=NF; i++) {a[NR,i] = $i}}; {p = NF} END {for (i=1; i<=p; i++) { for (j=1; j<=NR; j++) {printf a[j,i]"\t"}; print ""}}' Seg7-Seg8-${a}_${b}_${c}_matrix.txt > Seg7-Seg8-${a}_${b}_${c}_matrix_rt.txt
+done
+done
+done
+
+#結合
+for a in DN WT
+do
+for b in minus plus
+do
+for c in `seq 1 2`
+do
+paste Seg1-${a}_${b}_${c}_intraseg_matrix.txt Seg1-Seg2-${a}_${b}_${c}_matrix.txt Seg1-Seg3-${a}_${b}_${c}_matrix.txt Seg1-Seg4-${a}_${b}_${c}_matrix.txt Seg1-Seg5-${a}_${b}_${c}_matrix.txt Seg1-Seg6-${a}_${b}_${c}_matrix.txt Seg1-Seg7-${a}_${b}_${c}_matrix.txt Seg1-Seg8-${a}_${b}_${c}_matrix.txt | sed -e "s/$(printf "\t\t")/$(printf "\t")/g" > Seg1-${a}_${b}_${c}_matrix.txt &&
+paste Seg1-Seg2-${a}_${b}_${c}_matrix_rt.txt Seg2-${a}_${b}_${c}_intraseg_matrix.txt Seg2-Seg3-${a}_${b}_${c}_matrix.txt Seg2-Seg4-${a}_${b}_${c}_matrix.txt Seg2-Seg5-${a}_${b}_${c}_matrix.txt Seg2-Seg6-${a}_${b}_${c}_matrix.txt Seg2-Seg7-${a}_${b}_${c}_matrix.txt Seg2-Seg8-${a}_${b}_${c}_matrix.txt | sed -e "s/$(printf "\t\t")/$(printf "\t")/g" > Seg2-${a}_${b}_${c}_matrix.txt &&
+paste Seg1-Seg3-${a}_${b}_${c}_matrix_rt.txt Seg2-Seg3-${a}_${b}_${c}_matrix_rt.txt Seg3-${a}_${b}_${c}_intraseg_matrix.txt Seg3-Seg4-${a}_${b}_${c}_matrix.txt Seg3-Seg5-${a}_${b}_${c}_matrix.txt Seg3-Seg6-${a}_${b}_${c}_matrix.txt Seg3-Seg7-${a}_${b}_${c}_matrix.txt Seg3-Seg8-${a}_${b}_${c}_matrix.txt | sed -e "s/$(printf "\t\t")/$(printf "\t")/g" > Seg3-${a}_${b}_${c}_matrix.txt &&
+paste Seg1-Seg4-${a}_${b}_${c}_matrix_rt.txt Seg2-Seg4-${a}_${b}_${c}_matrix_rt.txt Seg3-Seg4-${a}_${b}_${c}_matrix_rt.txt Seg4-${a}_${b}_${c}_intraseg_matrix.txt Seg4-Seg5-${a}_${b}_${c}_matrix.txt Seg4-Seg6-${a}_${b}_${c}_matrix.txt Seg4-Seg7-${a}_${b}_${c}_matrix.txt Seg4-Seg8-${a}_${b}_${c}_matrix.txt | sed -e "s/$(printf "\t\t")/$(printf "\t")/g" > Seg4-${a}_${b}_${c}_matrix.txt &&
+paste Seg1-Seg5-${a}_${b}_${c}_matrix_rt.txt Seg2-Seg5-${a}_${b}_${c}_matrix_rt.txt Seg3-Seg5-${a}_${b}_${c}_matrix_rt.txt Seg4-Seg5-${a}_${b}_${c}_matrix_rt.txt Seg5-${a}_${b}_${c}_intraseg_matrix.txt Seg5-Seg6-${a}_${b}_${c}_matrix.txt Seg5-Seg7-${a}_${b}_${c}_matrix.txt Seg5-Seg8-${a}_${b}_${c}_matrix.txt | sed -e "s/$(printf "\t\t")/$(printf "\t")/g" > Seg5-${a}_${b}_${c}_matrix.txt &&
+paste Seg1-Seg6-${a}_${b}_${c}_matrix_rt.txt Seg2-Seg6-${a}_${b}_${c}_matrix_rt.txt Seg3-Seg6-${a}_${b}_${c}_matrix_rt.txt Seg4-Seg6-${a}_${b}_${c}_matrix_rt.txt Seg5-Seg6-${a}_${b}_${c}_matrix_rt.txt Seg6-${a}_${b}_${c}_intraseg_matrix.txt Seg6-Seg7-${a}_${b}_${c}_matrix.txt Seg6-Seg8-${a}_${b}_${c}_matrix.txt | sed -e "s/$(printf "\t\t")/$(printf "\t")/g" > Seg6-${a}_${b}_${c}_matrix.txt &&
+paste Seg1-Seg7-${a}_${b}_${c}_matrix_rt.txt Seg2-Seg7-${a}_${b}_${c}_matrix_rt.txt Seg3-Seg7-${a}_${b}_${c}_matrix_rt.txt Seg4-Seg7-${a}_${b}_${c}_matrix_rt.txt Seg5-Seg7-${a}_${b}_${c}_matrix_rt.txt Seg6-Seg7-${a}_${b}_${c}_matrix_rt.txt Seg7-${a}_${b}_${c}_intraseg_matrix.txt Seg7-Seg8-${a}_${b}_${c}_matrix.txt | sed -e "s/$(printf "\t\t")/$(printf "\t")/g" > Seg7-${a}_${b}_${c}_matrix.txt &&
+paste Seg1-Seg8-${a}_${b}_${c}_matrix_rt.txt Seg2-Seg8-${a}_${b}_${c}_matrix_rt.txt Seg3-Seg8-${a}_${b}_${c}_matrix_rt.txt Seg4-Seg8-${a}_${b}_${c}_matrix_rt.txt Seg5-Seg8-${a}_${b}_${c}_matrix_rt.txt Seg6-Seg8-${a}_${b}_${c}_matrix_rt.txt Seg7-Seg8-${a}_${b}_${c}_matrix_rt.txt Seg8-${a}_${b}_${c}_intraseg_matrix.txt | sed -e "s/$(printf "\t\t")/$(printf "\t")/g" > Seg8-${a}_${b}_${c}_matrix.txt &&
+cat Seg?-${a}_${b}_${c}_matrix.txt > ${a}_${b}_${c}_total_matrix.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"}; {for (i=1; i<=140; i++){if ($i == "1") $i = 0}; {print $0}}' ${a}_${b}_${c}_total_matrix.txt > ${a}_${b}_${c}_normalization_0.txt
+done
+done
+done
+
+#matrix balancing
+for a in DN WT
+do
+for b in minus plus
+do
+for c in `seq 1 2`
+do
+for d in `seq 1 50`
+do
+e=$((${d}-1))
+awk '{for (i=1; i<=140; i++){sum[NR]=sum[NR]+$i}} END {for (i=1; i<=140; i++) {if (sum[i]==0) sum[i]=1}; for (i=1; i<=140; i++) {cover_ave=cover_ave+sum[i]/140}; for (i=1; i<=140; i++){print sum[i]/140}}' ${a}_${b}_${c}_normalization_${e}.txt > ${a}_${b}_${c}_normalization_list_${d}.txt &&
+awk 'BEGIN {FS="\t";OFS="\t"; i=1; while((getline < "'"${a}"'_'"${b}"'_'"${c}"'_normalization_list_'"${d}"'.txt")>0) {a[i]=$0; i=i+1}} {for (i=1; i<=140; i++) {$i = $i/a[i]/a[NR]}}; {print $0}' ${a}_${b}_${c}_normalization_${e}.txt > ${a}_${b}_${c}_normalization_${d}.txt
+done
+for d in `seq 1 49`
+do
+rm ${a}_${b}_${c}_normalization_list_${d}.txt &&
+rm ${a}_${b}_${c}_normalization_${d}.txt
+done
+done
+done
+done
+
+#IDRする準備
+for a in DN WT
+do
+for b in minus plus
+do
+for c in `seq 1 2`
+do
+tr '\t' '\n' <${a}_${b}_${c}_normalization_50.txt> ${a}_${b}_${c}_list.txt &&
+awk '/./' ${a}_${b}_${c}_list.txt > ${a}_${b}_${c}_list2.txt &&
+paste IDR_head.txt ${a}_${b}_${c}_list2.txt IDR_foot.txt > ${a}_${b}_${c}_IDR.txt &&
+awk '$7 > 0 {print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9"\t"1}' ${a}_${b}_${c}_IDR.txt > ${a}_${b}_${c}_IDR2.txt
+done
+done
+done
+
+#IDR レガシーの3.9.1で動かす
+for a in DN WT
+do
+for b in minus plus
+do
+IDR -s ${a}_${b}_1_IDR2.txt ${a}_${b}_2_IDR2.txt --input-file-type narrowPeak -o ${a}_${b}_IDR_output.txt --plot --soft-idr-threshold 0.05 &&
+awk '$5 >= 540 && $1 != 1 {print $0}' ${a}_${b}_IDR_output.txt  | awk '{print (int($1/140))+1"\t"$1%140"\t"$7}' |awk '$2 == 0 {print $1-1"\t"140"\t"$3}; $2 !=0 {print $0}' |awk '{a[$1,$2]=$3}; END {for (i=1; i <=140 ; i++) {for (j=1; j <=140; j++) {if (a[i,j]=="") a[i,j]=0; printf a[i,j]"\t"}; print ""}}' > ${a}_${b}_IDR_matrix.txt
+done
+done
+
+#matrixの数値をノーマライズ
+for a in DN WT
+do
+for b in minus plus
+do
+awk '{for (i=1; i<=140; i++) {a[i,NR]=$i; s=s+$i}} END {for (i=1; i<=140; i++) {for (j=1; j<=140; j++) {printf a[i,j]/s"\t"}; print ""}}' ${a}_${b}_IDR_matrix.txt > ${a}_${b}_IDR_norm_matrix.txt
+done
+done
+
+#ligation(-)で検出されたbinはすべて0にする
+for a in DN WT
+do
+paste ${a}_plus_IDR_norm_matrix.txt ${a}_minus_IDR_norm_matrix.txt | awk '{for (i=1; i<=140; i++) {if ($(i+140) == 0) {printf $i"\t"} else {printf "0\t"}}; print ""}' > ${a}_diff_IDR_norm_matrix.txt
+done
+
+#intersegmentのlinkを抽出
+for a in DN WT
+do
+awk ' NR >=25 && NR <= 48 {for (i=1; i <= 24; i++) {if ($i != 0) print "Seg2\t"NR-24"\t"i"\t"$i}}; NR >=49 && NR <= 71 {for (i=1; i <= 48; i++) {if ($i != 0) print "Seg3\t"NR-48"\t"i"\t"$i}}; NR >= 72 && NR <= 89 {for (i=1; i <= 71; i++) {if ($i != 0) print "Seg4\t"NR-71"\t"i"\t"$i}}; NR >= 90 && NR <= 105 {for (i=1; i <= 89; i++) {if ($i != 0) print "Seg5\t"NR-89"\t"i"\t"$i}}; NR >= 106 && NR <= 120 {for (i=1; i <= 105; i++) {if ($i != 0) print "Seg6\t"NR-105"\t"i"\t"$i}}; NR >= 121 && NR <= 131 {for (i=1; i<= 120; i++) {if ($i != 0) print "Seg7\t"NR-120"\t"i"\t"$i}}; NR >= 132 && NR <= 140 {for (i=1; i <= 131; i++) {if ($i != 0) print "Seg8\t"NR-131"\t"i"\t"$i}}' ${a}_diff_IDR_norm_matrix.txt | awk ' $3 >= 1 && $3 <= 24 {print $1,$2,"Seg1",$3,$4}; $3 >= 25 && $3 <= 48 {print $1,$2,"Seg2",$3-24,$4}; $3 >= 49 && $3 <= 71 {print $1,$2,"Seg3",$3-48,$4};$3 >= 72 && $3 <= 89 {print $1,$2,"Seg4",$3-71,$4}; $3 >= 90 && $3 <= 105 {print $1,$2,"Seg5",$3-89,$4};$3 >= 106 && $3 <= 120 {print $1,$2,"Seg6",$3-105,$4}; $3 >= 121 && $3 <= 131 {print $1,$2,"Seg7",$3-120,$4};$3 >= 132 && $3 <= 140 {print $1,$2,"Seg8",$3-131,$4}'> ${a}_diff_IDR_norm_link.txt
+done
+
