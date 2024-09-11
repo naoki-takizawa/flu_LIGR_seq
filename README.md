@@ -1,5 +1,5 @@
-# flu_LIGR_seq
-Source codes for flu_LIGR_seq.
+# Flu LIGR-seq of infected cells
+Source codes for flu LIGR-seq of infected cells.
 
 Sequence data was deposited to DDBJ.
 
